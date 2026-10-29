@@ -23,3 +23,15 @@ AAB signed with your upload key. Do not put keystores or passwords in the reposi
 Configure signing secrets and a signing step before using the bundle for Play Console.
 The workflow has not been executed in GitHub from this package, so the first run must
 be treated as a build test.
+
+
+## Branding and scope
+Wiz Fuel Density is an independent, offline density-correction utility for fuel retail teams. It is not affiliated with or endorsed by IOCL, BPCL, HPCL, Nayara Energy, or Jio-bp. The app currently focuses on density correction to 15 °C; tank-volume calculations are not included.
+
+
+## Density history
+Saved readings stay on the device and include the local date/time, observed temperature and density, fuel-type classification, and corrected density at 15 °C. Users can delete individual entries, clear history, or export CSV. Fuel classification follows the requested rule: observed density 800 kg/m³ and above = Diesel; 700–799 kg/m³ = Petrol.
+
+
+## App icon
+The launcher icon now uses the clean fuel-nozzle and 15°C artwork. The density history and calculation logic are unchanged.
