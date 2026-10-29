@@ -1,38 +1,30 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
-<title>Wiz Fuel Density</title>
+<title>Fuel Density · Wiz Labs</title>
 <style>
 /* Layout: one narrow instrument-panel column. Inputs on top, one large reading below, details underneath. */
 :root{
-  --bg:#eef1ee;          /* chalk-green grey */
-  --surface:#ffffff;
-  --ink:#10211f;         /* deep tank-green ink */
-  --muted:#52625f;
-  --line:#d3dbd7;
-  --accent:#0b6b5e;      /* petrol teal */
-  --accent-ink:#ffffff;
-  --signal:#e8a400;      /* gauge amber */
-  --signal-soft:#fff3cf;
-  --ok:#1b7a3d;
-  --warn:#8a5a00;
-  --bad:#b3261e;
-  --reading-bg:#10211f;
-  --reading-ink:#f2f7f4;
-  --reading-muted:#9fb5ae;
+  --bg:#090b0b;          /* deep black */
+  --surface:#151818;
+  --ink:#f4f5f2;         /* warm white */
+  --muted:#a2aaa6;
+  --line:#303635;
+  --accent:#ffd21f;      /* signal yellow */
+  --accent-ink:#151300;
+  --signal:#ffd21f;      /* signal yellow */
+  --signal-soft:#302b12;
+  --ok:#65d38b;
+  --warn:#ffd21f;
+  --bad:#ff8078;
+  --reading-bg:#000000;
+  --reading-ink:#f7f7f2;
+  --reading-muted:#a2aaa6;
   --display:"Barlow Condensed","sans-serif-condensed","Arial Narrow",sans-serif;
   --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0c1514;--surface:#142220;--ink:#e8f1ee;--muted:#93a9a3;--line:#243734;
-  --accent:#3fc2ad;--accent-ink:#06201b;--signal:#f2b92a;--signal-soft:#3a2f0c;
-  --ok:#5fcf86;--warn:#f2b92a;--bad:#ff8a80;
-  --reading-bg:#050c0b;--reading-ink:#f2f7f4;--reading-muted:#8ea7a0;color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0c1514;--surface:#142220;--ink:#e8f1ee;--muted:#93a9a3;--line:#243734;
-  --accent:#3fc2ad;--accent-ink:#06201b;--signal:#f2b92a;--signal-soft:#3a2f0c;
-  --ok:#5fcf86;--warn:#f2b92a;--bad:#ff8a80;
-  --reading-bg:#050c0b;--reading-ink:#f2f7f4;--reading-muted:#8ea7a0;color-scheme:dark}
+/* The app intentionally uses a consistent black-and-yellow instrument-panel theme. */
+:root[data-theme="light"]{--bg:#f4f4ef;--surface:#ffffff;--ink:#171916;--muted:#626a65;--line:#d7dbd5;--accent:#c7a400;--accent-ink:#151300;--signal:#ffd21f;--signal-soft:#fff5c7;--ok:#1b7a3d;--warn:#8a5a00;--bad:#b3261e;--reading-bg:#101211;--reading-ink:#f2f7f4;--reading-muted:#a2aaa6;color-scheme:light}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;
@@ -115,7 +107,7 @@ html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important
 <div class="app">
   <header>
     <div>
-      <h1>Wiz Fuel Density</h1>
+      <h1>Fuel Density</h1>
       <p class="sub">For fuel retail teams across India</p>
       <p class="sub" style="font-size:12px;margin-top:5px">Density correction to 15 °C · Works offline</p>
     </div>
@@ -153,7 +145,7 @@ html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important
         <button class="ex" type="button" data-ex="22,825">Sample C <span>22 °C · 825</span></button>
       </div>
     </div>
-    <p class="hint" style="margin:0">The result updates automatically when you change either value.</p>
+    <p class="hint" style="margin:0">Enter both readings, then tap Calculate to generate the corrected density.</p>
   </form>
 
   <section class="reading" id="reading" aria-live="polite">
@@ -162,7 +154,9 @@ html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important
     <div class="chips" id="chips"></div>
     <div class="scale" id="scale" hidden></div>
     <div class="actions">
-      <button class="btn primary" id="copy" type="button">Copy result</button>
+      <button class="btn primary" id="calculate" type="button">Calculate</button>
+      <button class="btn" id="save-history" type="button">Save reading</button>
+      <button class="btn" id="copy" type="button">Copy result</button>
       <button class="btn" id="clear" type="button">Reset</button>
     </div>
   </section>
@@ -172,16 +166,19 @@ html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important
   <details id="history">
     <summary>Density history <span id="history-count" style="margin-left:auto;color:var(--muted);font-size:12px;font-weight:500">0 saved</span></summary>
     <div class="history-tools" style="padding:0 0 12px">
-      <button class="btn" id="export-history" type="button">Export CSV</button>
       <button class="btn" id="clear-history" type="button">Clear history</button>
     </div>
     <div id="history-list" class="history-list"></div>
     <div id="history-empty" class="history-empty">Saved readings will appear here with their date and time.</div>
   </details>
 
-  <details id="how">
-    <summary>How this value is found</summary>
-    <div class="detail-body" id="how-body"></div>
+  <details id="settings">
+    <summary>Settings &amp; reference</summary>
+    <div class="detail-body">
+      <p style="margin:0 0 10px">Reference standard: ASTM D1250 / Table 53B.</p>
+      <a href="https://store.astm.org/d1250-80r02.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:700">Download / access ASTM Table 53B from ASTM</a>
+      <p class="hint" style="margin:10px 0 0">ASTM may require purchase or account access. This app works offline; the reference link requires an internet connection.</p>
+    </div>
   </details>
 
   <footer>
@@ -359,7 +356,6 @@ function renderHistory() {
   }).join('');
   $('history-empty').hidden = items.length > 0;
   $('clear-history').disabled = items.length === 0;
-  $('export-history').disabled = items.length === 0;
 }
 $('save-history').addEventListener('click', () => {
   if (!last) {
@@ -398,29 +394,15 @@ $('clear-history').addEventListener('click', () => {
     renderHistory();
   }
 });
-$('export-history').addEventListener('click', () => {
-  const items = readHistory();
-  if (!items.length) return;
-  const rows = [['Saved at (local time)','Observed temperature (°C)','Observed density (kg/m³)','Fuel type','Corrected density at 15°C (kg/m³)']];
-  items.forEach(item => rows.push([
-    localDateTime(item.savedAt), Number(item.temperature).toFixed(1),
-    Number(item.observedDensity).toFixed(0), fuelType(Number(item.observedDensity)).label,
-    Number(item.correctedDensity).toFixed(1)
-  ]));
-  const csv = rows.map(row => row.map(cell => '"' + String(cell).replace(/"/g,'""') + '"').join(',')).join('\r\n');
-  const blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'wiz-fuel-density-history.csv'; a.click();
-  URL.revokeObjectURL(url);
-});
+
 
 // Inputs
-$('temp').addEventListener('input', render);
+$('temp').addEventListener('input', () => { last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true; });
 // Density accepts whole numbers only: any decimal point or non-digit is removed as it is typed or pasted.
 $('dens').addEventListener('input', () => {
   const el = $('dens'), clean = el.value.replace(/[^0-9]/g, '');
   if (clean !== el.value) el.value = clean;
-  render();
+  last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true;
 });
 $('form').addEventListener('submit', e => e.preventDefault());
 document.querySelectorAll('.step').forEach(b => b.addEventListener('click', () => {
@@ -428,13 +410,17 @@ document.querySelectorAll('.step').forEach(b => b.addEventListener('click', () =
   const cur = parse(el.value), step = Number(isT ? b.dataset.t : b.dataset.d);
   const base = isNaN(cur) ? (isT ? 15 : 740) : cur;
   el.value = (Math.round((base + step) * 100) / 100).toString();
-  render();
+  last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true;
 }));
 document.querySelectorAll('.ex').forEach(b => b.addEventListener('click', () => {
   const [t, d] = b.dataset.ex.split(',');
-  $('temp').value = t; $('dens').value = d; render();
+  $('temp').value = t; $('dens').value = d; last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true;
 }));
-$('clear').addEventListener('click', () => { $('temp').value = ''; $('dens').value = ''; render(); $('temp').focus(); });
+$('calculate').addEventListener('click', render);
+$('save-history').disabled = true;
+const _render = render;
+render = function(){ _render(); $('save-history').disabled = !last; $('copy').disabled = !last; };
+$('clear').addEventListener('click', () => { $('temp').value = ''; $('dens').value = ''; last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('notes').innerHTML = ''; $('scale').hidden = true; $('how-body').innerHTML = '<p style="margin:0">Enter temperature and density, then tap Calculate.</p>'; $('temp').focus(); });
 $('copy').addEventListener('click', async () => {
   if (!last) return;
   const txt = last.shown.toFixed(1) + ' kg/m³ at 15 °C (' + fuelType(last.d).label + '; observed ' + last.d.toFixed(0) + ' kg/m³ at ' + last.T.toFixed(1) + ' °C; ASTM Table 53B)';
@@ -455,7 +441,7 @@ $('theme').addEventListener('click', () => {
   root.dataset.theme = dark ? 'light' : 'dark';
 });
 
-render();
+$('how-body').innerHTML = '<p style="margin:0">Enter temperature and density, then tap Calculate to see the table lookup and interpolation details.</p>';
 renderHistory();
 </script>
 
