@@ -2,189 +2,39 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
 <title>Fuel Density · Wiz Labs</title>
 <style>
-/* Layout: one narrow instrument-panel column. Inputs on top, one large reading below, details underneath. */
-:root{
-  --bg:#090b0b;          /* deep black */
-  --surface:#151818;
-  --ink:#f4f5f2;         /* warm white */
-  --muted:#a2aaa6;
-  --line:#303635;
-  --accent:#ffd21f;      /* signal yellow */
-  --accent-ink:#151300;
-  --signal:#ffd21f;      /* signal yellow */
-  --signal-soft:#302b12;
-  --ok:#65d38b;
-  --warn:#ffd21f;
-  --bad:#ff8078;
-  --reading-bg:#000000;
-  --reading-ink:#f7f7f2;
-  --reading-muted:#a2aaa6;
-  --display:"Barlow Condensed","sans-serif-condensed","Arial Narrow",sans-serif;
-  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,monospace;
-}
-/* The app intentionally uses a consistent black-and-yellow instrument-panel theme. */
-:root[data-theme="light"]{--bg:#f4f4ef;--surface:#ffffff;--ink:#171916;--muted:#626a65;--line:#d7dbd5;--accent:#c7a400;--accent-ink:#151300;--signal:#ffd21f;--signal-soft:#fff5c7;--ok:#1b7a3d;--warn:#8a5a00;--bad:#b3261e;--reading-bg:#101211;--reading-ink:#f2f7f4;--reading-muted:#a2aaa6;color-scheme:light}
-
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;
-  padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.app{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-h1{font-family:var(--display);font-weight:700;font-size:28px;line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
-.sub{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.35}
-button{font:inherit;color:inherit}
-.icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center;flex:none}
-.icon-btn svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
-
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:16px}
-.field{display:flex;flex-direction:column;gap:6px;min-width:0}
-.field label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.row{display:flex;align-items:stretch;gap:8px}
-.row input{flex:1;min-width:0;height:60px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);
-  font-family:var(--display);font-weight:600;font-size:36px;text-align:center;font-variant-numeric:tabular-nums;padding:0 8px}
-.row input:focus{border-color:var(--accent);outline:3px solid color-mix(in srgb,var(--accent) 30%,transparent);outline-offset:0}
-.row input[aria-invalid="true"]{border-color:var(--bad)}
-.step{width:56px;flex:none;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-family:var(--display);font-size:28px;font-weight:600}
-.step:active{background:var(--bg)}
-.unit{font-family:var(--mono);font-size:13px;color:var(--muted);align-self:center;width:58px;flex:none}
-.hint{font-size:13px;color:var(--muted);min-height:18px}
-.hint.bad{color:var(--bad)}
-
-.reading{background:var(--reading-bg);color:var(--reading-ink);border-radius:16px;padding:18px 16px 16px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
-.reading .lbl{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--reading-muted)}
-.big{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.big .num{font-family:var(--display);font-weight:700;font-size:84px;line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.big .u{font-family:var(--mono);font-size:15px;color:var(--reading-muted)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{font-family:var(--mono);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--reading-ink) 25%,transparent);color:var(--reading-ink);font-variant-numeric:tabular-nums}
-.chip.amber{background:var(--signal);border-color:var(--signal);color:#1d1500}
-.reading.empty .num{color:var(--reading-muted)}
-.scale{margin-top:4px}
-.scale svg{display:block;width:100%;height:auto;overflow:visible}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{min-height:44px;padding:0 18px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600;font-size:15px}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);flex:1}
-.reading .btn{background:transparent;border-color:color-mix(in srgb,var(--reading-ink) 30%,transparent);color:var(--reading-ink)}
-.reading .btn.primary{background:var(--signal);border-color:var(--signal);color:#1d1500}
-
-.notice{border-radius:12px;padding:10px 12px;font-size:14px;display:flex;gap:8px;background:var(--signal-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--signal) 60%,transparent)}
-.notice.bad{background:color-mix(in srgb,var(--bad) 12%,var(--surface));border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
-.notice b{font-weight:600}
-
-details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0 16px}
-summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weight:600;font-size:15px}
-.detail-body{padding-bottom:14px;display:flex;flex-direction:column;gap:10px;font-size:14px}
-table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
-th,td{padding:5px 6px;text-align:right;border-bottom:1px solid var(--line)}
-th{color:var(--muted);font-weight:500}
-th:first-child,td:first-child{text-align:left}
-.tw{overflow-x:auto}
-.examples{display:flex;flex-wrap:wrap;gap:8px}
-.history-list{display:flex;flex-direction:column;gap:8px;padding:0 0 14px}
-.history-item{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;background:var(--surface)}
-.history-meta{font-size:12px;color:var(--muted);line-height:1.4}
-.history-values{font-size:14px;font-variant-numeric:tabular-nums}
-.fuel-tag{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:700;letter-spacing:.04em}
-.fuel-tag.petrol{background:#dff3e5;color:#14532d}
-.fuel-tag.diesel{background:#fff0c2;color:#704900}
-.fuel-tag.unknown{background:var(--bg);color:var(--muted)}
-.history-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.history-tools .btn{min-height:36px;padding:0 12px;font-size:13px}
-.history-empty{font-size:14px;color:var(--muted);padding:0 0 14px}
-.ex{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-size:13px}
-.ex span{font-family:var(--mono);color:var(--muted)}
-footer{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:8px}
-footer p{margin:0}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (prefers-reduced-motion:no-preference){.num{transition:opacity .15s}}
-@media (max-width:380px){.big .num{font-size:68px}}
-html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}
+:root{--bg:#080909;--surface:#141617;--surface2:#0d0f10;--ink:#f5f5f7;--muted:#969ba5;--line:#2b2e32;--accent:#ffd52a;--accent-ink:#171500;--reading-bg:#17191b;--reading-ink:#f8f8fa;--reading-muted:#a2a7b1;--body:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color-scheme:dark}
+:root[data-theme="light"]{--bg:#f4f5f8;--surface:#fff;--surface2:#f6f7fa;--ink:#17181c;--muted:#686d78;--line:#dfe1e7;--accent:#ffcf26;--accent-ink:#191600;--reading-bg:#fff;--reading-ink:#17181c;--reading-muted:#696e78;color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;-webkit-text-size-adjust:100%}body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.25;padding:10px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left))}.app{height:100%;max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:9px;overflow:hidden}header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none;min-height:48px}h1{font-size:clamp(21px,5.3vw,27px);font-weight:750;letter-spacing:-.045em;line-height:1.05;margin:0}.brand-accent{color:var(--accent)}button,input{font:inherit;color:inherit}.icon-btn{width:42px;height:42px;border-radius:15px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;flex:none;cursor:pointer}.icon-btn svg{width:21px;height:21px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round}.menu-wrap{position:relative}.menu{position:absolute;right:0;top:48px;z-index:10;width:210px;padding:7px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:0 12px 35px #0008;display:none}.menu.open{display:flex;flex-direction:column;gap:4px}.menu a,.menu button{border:0;text-decoration:none;text-align:left;background:transparent;padding:11px 10px;border-radius:9px;font-size:14px;color:var(--ink)}.menu a:active,.menu button:active{background:var(--surface2)}.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px;display:flex;flex-direction:column;gap:10px;flex:none}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field label{font-size:11px;font-weight:650;letter-spacing:.055em;color:var(--muted)}.row{display:flex;align-items:center;gap:8px}.row input{width:0;flex:1;min-width:0;height:52px;border:1px solid var(--line);border-radius:14px;background:var(--surface2);font-size:28px;font-weight:650;letter-spacing:-.03em;padding:0 13px;outline:none;font-variant-numeric:tabular-nums}.row input:focus{border-color:var(--accent);box-shadow:0 0 0 2px #ffd52a25}.unit{color:var(--muted);font-size:13px;min-width:49px;text-align:right}.reading{background:var(--reading-bg);color:var(--reading-ink);border:1px solid var(--line);border-radius:20px;padding:13px 15px;display:flex;flex-direction:column;gap:8px;flex:none;min-height:0}.reading .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--reading-muted)}.big{display:flex;align-items:baseline;gap:8px;flex-wrap:nowrap}.big .num{font-size:clamp(42px,12vw,60px);line-height:.98;font-weight:780;letter-spacing:-.055em;font-variant-numeric:tabular-nums;color:var(--accent)}.big .u{font-size:14px;color:var(--reading-muted);white-space:nowrap}.chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.chip{font-size:12px;padding:5px 9px;border-radius:999px;border:1px solid var(--line);color:var(--reading-muted);font-variant-numeric:tabular-nums}.chip.amber{background:#ffd52a18;border-color:#8b7620;color:var(--accent)}.btn{height:46px;border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:700}.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);width:100%;font-size:16px}.notice{font-size:12px;color:#ffb4ac;padding:5px 0}.history{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px 11px;min-height:0;flex:1;display:flex;flex-direction:column;gap:6px;overflow:hidden}.history-head{font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between;flex:none}.history-list{display:flex;flex-direction:column;gap:5px;min-height:0}.history-item{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:12px;min-height:38px}.history-result{font-size:17px;font-weight:750;color:var(--accent);font-variant-numeric:tabular-nums}.history-meta{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}.history-empty{font-size:12px;color:var(--muted);padding:4px 1px}.notice[hidden],.history-empty[hidden]{display:none!important}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}a{color:var(--accent)}@media(max-height:650px){body{padding-top:5px;padding-bottom:4px}.app{gap:6px}header{min-height:40px}.icon-btn{width:36px;height:36px}.panel{padding:9px;gap:7px}.row input{height:43px;font-size:25px}.reading{padding:10px 12px;gap:6px}.big .num{font-size:43px}.btn{height:40px}.history{padding:8px;gap:4px}.history-item{padding:5px 7px;min-height:32px}}
 </style>
 
 </head><body>
 <div class="app">
   <header>
-    <div>
-      <h1>Fuel Density</h1>
-      <p class="sub">For fuel retail teams across India</p>
-      <p class="sub" style="font-size:12px;margin-top:5px">Density correction to 15 °C · Works offline</p>
+    <h1>Petrol Diesel <span class="brand-accent">Density</span> Calculator</h1>
+    <div class="menu-wrap">
+      <button class="icon-btn" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <nav class="menu" id="menu" aria-label="App menu">
+        <button id="theme" type="button">Switch appearance</button>
+        <a href="https://store.astm.org/d1250-80r02.html" target="_blank" rel="noopener noreferrer">ASTM Table 53B reference ↗</a>
+      </nav>
     </div>
-    <button class="icon-btn" id="theme" type="button" aria-label="Switch light or dark theme">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-    </button>
   </header>
-
   <form class="panel" id="form" autocomplete="off" novalidate>
-    <div class="field">
-      <label for="temp">Observed temperature</label>
-      <div class="row">
-        <button class="step" type="button" data-t="-0.5" aria-label="Decrease temperature by 0.5">−</button>
-        <input id="temp" inputmode="decimal" type="text" value="28.5" aria-describedby="temp-hint">
-        <button class="step" type="button" data-t="0.5" aria-label="Increase temperature by 0.5">+</button>
-        <span class="unit">°C</span>
-      </div>
-      <div class="hint" id="temp-hint">Table range −10.00 to 80.00 °C</div>
-    </div>
-    <div class="field">
-      <label for="dens">Observed density</label>
-      <div class="row">
-        <button class="step" type="button" data-d="-1" aria-label="Decrease density by 1">−</button>
-        <input id="dens" inputmode="numeric" pattern="[0-9]*" type="text" value="742" aria-describedby="dens-hint">
-        <button class="step" type="button" data-d="1" aria-label="Increase density by 1">+</button>
-        <span class="unit">kg/m³</span>
-      </div>
-      <div class="hint" id="dens-hint">Whole numbers only, 710 to 840 kg/m³</div>
-    </div>
-    <div>
-      <div class="field"><label>Quick examples · sample values</label></div>
-      <div class="examples" style="margin-top:6px">
-        <button class="ex" type="button" data-ex="28.5,742">Sample A <span>28.5 °C · 742</span></button>
-        <button class="ex" type="button" data-ex="32,775">Sample B <span>32 °C · 775</span></button>
-        <button class="ex" type="button" data-ex="22,825">Sample C <span>22 °C · 825</span></button>
-      </div>
-    </div>
-    <p class="hint" style="margin:0">Enter both readings, then tap Calculate to generate the corrected density.</p>
+    <div class="field"><label for="temp">Observed temperature</label><div class="row"><input id="temp" inputmode="decimal" type="text" placeholder="e.g. 28.5" aria-label="Observed temperature in degrees Celsius"><span class="unit">°C</span></div></div>
+    <div class="field"><label for="dens">Observed density</label><div class="row"><input id="dens" inputmode="numeric" pattern="[0-9]*" type="text" placeholder="e.g. 743" aria-label="Observed density in kilograms per cubic metre"><span class="unit">kg/m³</span></div></div>
   </form>
-
-  <section class="reading" id="reading" aria-live="polite">
-    <div class="lbl">Corrected density at 15 °C</div>
+  <section class="reading empty" id="reading" aria-live="polite">
+    <div class="lbl">DENSITY AT 15 °C</div>
     <div class="big"><span class="num" id="out">—</span><span class="u">kg/m³</span></div>
-    <div class="chips" id="chips"></div>
-    <div class="scale" id="scale" hidden></div>
-    <div class="actions">
-      <button class="btn primary" id="calculate" type="button">Calculate</button>
-      <button class="btn" id="save-history" type="button">Save reading</button>
-      <button class="btn" id="copy" type="button">Copy result</button>
-      <button class="btn" id="clear" type="button">Reset</button>
-    </div>
+    <div class="chips" id="chips"><span class="chip">Enter readings above</span></div>
+    <div id="notes" class="notice" hidden></div>
+    <button class="btn primary" id="calculate" type="button">Calculate density</button>
   </section>
-
-  <div id="notes" style="display:flex;flex-direction:column;gap:8px"></div>
-
-  <details id="history">
-    <summary>Density history <span id="history-count" style="margin-left:auto;color:var(--muted);font-size:12px;font-weight:500">0 saved</span></summary>
-    <div class="history-tools" style="padding:0 0 12px">
-      <button class="btn" id="clear-history" type="button">Clear history</button>
-    </div>
+  <section class="history" id="history" aria-label="Recent calculations">
+    <div class="history-head"><span>Recent calculations</span><span id="history-count" style="color:var(--muted);font-weight:500">0 / 3</span></div>
     <div id="history-list" class="history-list"></div>
-    <div id="history-empty" class="history-empty">Saved readings will appear here with their date and time.</div>
-  </details>
-
-  <details id="settings">
-    <summary>Settings &amp; reference</summary>
-    <div class="detail-body">
-      <p style="margin:0 0 10px">Reference standard: ASTM D1250 / Table 53B.</p>
-      <a href="https://store.astm.org/d1250-80r02.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-weight:700">Download / access ASTM Table 53B from ASTM</a>
-      <p class="hint" style="margin:10px 0 0">ASTM may require purchase or account access. This app works offline; the reference link requires an internet connection.</p>
-    </div>
-  </details>
-
-  <footer>
-    <p>Independent utility for fuel retail teams. Not affiliated with or endorsed by IOCL, BPCL, HPCL, Nayara Energy or Jio-bp.</p>
-    <p>Results depend on accurate readings and the supplied reference table. Verify results against applicable standards and your organisation’s operating procedures before operational or commercial use.</p>
-  </footer>
+    <div id="history-empty" class="history-empty">Your last 3 calculations will appear here.</div>
+  </section>
 </div>
 
 <script>
@@ -227,54 +77,36 @@ let last = null;
 function render() {
   const T = parse($('temp').value), d = parse($('dens').value);
   const tEmpty = $('temp').value.trim() === '', dEmpty = $('dens').value.trim() === '';
-  const notes = [];
-  const th = $('temp-hint'), dh = $('dens-hint');
-  th.className = 'hint'; dh.className = 'hint';
+  const reading = $('reading'), out = $('out'), chips = $('chips'), note = $('notes');
+  chips.innerHTML = ''; last = null; note.hidden = true; note.textContent = '';
   $('temp').removeAttribute('aria-invalid'); $('dens').removeAttribute('aria-invalid');
-  th.textContent = 'Table range −10.00 to 80.00 °C';
-  dh.textContent = 'Whole numbers only, 710 to 840 kg/m³';
-  let ok = true;
-  if (!tEmpty && (isNaN(T) || T < T_MIN || T > T_MAX)) {
-    ok = false; th.className = 'hint bad';
-    th.textContent = isNaN(T) ? 'Enter a number, for example 28.5' : 'Outside the table. Use −10 to 80 °C.';
-    $('temp').setAttribute('aria-invalid', 'true');
-  }
-  if (!dEmpty && (isNaN(d) || d < D_MIN || d > D_MAX)) {
-    ok = false; dh.className = 'hint bad';
-    dh.textContent = isNaN(d) ? 'Enter a whole number, for example 742' : 'Outside the supplied table. Use 710 to 840 kg/m³.';
-    $('dens').setAttribute('aria-invalid', 'true');
-  }
-  const reading = $('reading'), out = $('out'), chips = $('chips'), scale = $('scale');
-  chips.innerHTML = ''; scale.hidden = true; last = null;
-  if (tEmpty || dEmpty || !ok) {
+  if (tEmpty || dEmpty || isNaN(T) || isNaN(d) || T < T_MIN || T > T_MAX || d < D_MIN || d > D_MAX) {
     reading.classList.add('empty'); out.textContent = '—';
-    $('how-body').innerHTML = '<p style="margin:0">Enter temperature and density to see the working.</p>';
-    $('notes').innerHTML = '';
+    chips.innerHTML = '<span class="chip">Enter valid readings</span>';
+    if (!tEmpty && (!Number.isFinite(T) || T < T_MIN || T > T_MAX)) $('temp').setAttribute('aria-invalid','true');
+    if (!dEmpty && (!Number.isFinite(d) || d < D_MIN || d > D_MAX)) $('dens').setAttribute('aria-invalid','true');
+    note.hidden = false;
+    note.textContent = 'Temperature: −10 to 80 °C · Density: 710 to 840 kg/m³';
     return;
   }
   const r = lookup(T, d);
   if (r.missing) {
     reading.classList.add('empty'); out.textContent = '—';
-    $('notes').innerHTML = '<div class="notice bad"><span><b>No table value here.</b> This combination is not on the table pages that were supplied (710–720 kg/m³ below 20 °C, and 830–840 kg/m³ above 35 °C).</span></div>';
-    $('how-body').innerHTML = '';
+    note.hidden = false;
+    note.textContent = 'No reference-table value is available for this combination.';
     return;
   }
   reading.classList.remove('empty');
-  const v = r.v, shown = (Math.round(v * 10 + 1e-9) / 10);
+  const shown = Math.round(r.v * 10 + 1e-9) / 10;
   out.textContent = shown.toFixed(1);
   const diff = shown - d;
   const sign = diff > 0 ? '+' : diff < 0 ? '−' : '±';
-  chips.innerHTML =
-    '<span class="chip">Observed ' + d.toFixed(1) + ' at ' + T.toFixed(1) + ' °C</span>' +
-    '<span class="chip amber">' + sign + Math.abs(diff).toFixed(1) + ' kg/m³</span>' +
-    '<span class="chip">' + (shown / 1000).toFixed(4) + ' g/cm³</span>' +
-    '<span class="chip">' + fuelType(d).label + '</span>';
-  drawScale(T, scale);
-  last = { T, d, shown };
-  let n = '';
-  if (r.star) n += '<div class="notice"><span><b>Extrapolated value.</b> The table marks this region with * because the value is beyond the range of the original test data. Treat it as approximate.</span></div>';
-  $('notes').innerHTML = n;
-  how(T, d, r, v, shown);
+  chips.innerHTML = '<span class="chip">Observed ' + d.toFixed(1) + ' at ' + T.toFixed(1) + ' °C</span>' +
+    '<span class="chip amber">' + sign + Math.abs(diff).toFixed(1) + ' kg/m³</span>';
+  last = {T, d, shown};
+  note.hidden = !r.star;
+  note.textContent = r.star ? 'Approximate: marked as extrapolated in the source table.' : '';
+  autoSave(last);
 }
 
 function drawScale(T, el) {
@@ -301,147 +133,31 @@ function drawScale(T, el) {
   el.innerHTML = s; el.hidden = false;
 }
 
-function how(T, d, r, v, shown) {
-  const t0 = T_MIN + r.i0 / 4, t1 = T_MIN + r.i1 / 4, d0 = D_MIN + r.j0, d1 = D_MIN + r.j1;
-  const exact = r.i0 === r.i1 && r.j0 === r.j1;
-  const f = k => k.v.toFixed(1) + (k.star ? '*' : '');
-  let h = '';
-  if (exact) {
-    h += '<p style="margin:0">Your inputs sit exactly on a printed entry: <b>' + shown.toFixed(1) + '</b> kg/m³ at ' + fmtT(t0) + ' °C and ' + d0.toFixed(1) + ' kg/m³.</p>';
-  } else {
-    h += '<p style="margin:0">The value is read between the four nearest printed entries and interpolated in both directions.</p>';
-    h += '<div class="tw"><table><thead><tr><th>Density \\ Temp</th><th>' + fmtT(t0) + ' °C</th><th>' + (r.i1 !== r.i0 ? fmtT(t1) + ' °C' : '') + '</th></tr></thead><tbody>' +
-      '<tr><td>' + d0.toFixed(1) + '</td><td>' + f(r.c[0]) + '</td><td>' + (r.i1 !== r.i0 ? f(r.c[1]) : '') + '</td></tr>' +
-      (r.j1 !== r.j0 ? '<tr><td>' + d1.toFixed(1) + '</td><td>' + f(r.c[2]) + '</td><td>' + (r.i1 !== r.i0 ? f(r.c[3]) : '') + '</td></tr>' : '') +
-      '</tbody></table></div>';
-  }
-  h += '<p style="margin:0;color:var(--muted)">Result is rounded to 0.1 kg/m³, the same resolution as the printed table. Values marked * are extrapolated in the source table.</p>';
-  $('how-body').innerHTML = h;
-}
-
-// Density history is stored locally on this device only. Times use the device's local timezone.
+// Keep only the three most recent calculations locally on this device.
 const HISTORY_KEY = 'wizFuelDensityHistoryV1';
-function fuelType(d) {
-  if (d >= 800) return {label:'Diesel', key:'diesel'};
-  if (d >= 700 && d <= 799) return {label:'Petrol', key:'petrol'};
-  return {label:'Unclassified', key:'unknown'};
+function readHistory(){try{const a=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(a)?a.slice(0,3):[]}catch(_){return []}}
+function writeHistory(items){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(items.slice(0,3)));return true}catch(_){return false}}
+function autoSave(result){
+  if(!result) return;
+  const items=readHistory();
+  const newest={id:Date.now().toString(),savedAt:new Date().toISOString(),temperature:result.T,observedDensity:result.d,correctedDensity:result.shown};
+  items.unshift(newest); writeHistory(items.slice(0,3)); renderHistory();
 }
-function readHistory() {
-  try {
-    const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-    return Array.isArray(data) ? data : [];
-  } catch (_) { return []; }
+function renderHistory(){
+ const items=readHistory(); $('history-count').textContent=items.length+' / 3';
+ $('history-list').innerHTML=items.map(item=>'<article class="history-item"><div class="history-result">'+Number(item.correctedDensity).toFixed(1)+'</div><div class="history-meta">'+Number(item.temperature).toFixed(1)+' °C  ·  '+Number(item.observedDensity).toFixed(0)+' kg/m³  ·  '+new Date(item.savedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div></article>').join('');
+ $('history-empty').hidden=items.length>0;
 }
-function writeHistory(items) {
-  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(items)); return true; }
-  catch (_) { return false; }
-}
-function localDateTime(iso) {
-  return new Date(iso).toLocaleString([], {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit'});
-}
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-}
-function renderHistory() {
-  const items = readHistory();
-  $('history-count').textContent = items.length + ' saved';
-  $('history-list').innerHTML = items.map(item => {
-    const fuel = fuelType(Number(item.observedDensity));
-    return '<article class="history-item">' +
-      '<div><div class="history-meta">' + escapeHtml(localDateTime(item.savedAt)) + '</div>' +
-      '<div class="history-values" style="margin-top:6px">Observed: <b>' + Number(item.observedDensity).toFixed(0) + ' kg/m³</b> at ' + Number(item.temperature).toFixed(1) + ' °C</div>' +
-      '<div class="history-meta" style="margin-top:4px">Corrected density at <b>15 °C</b>: <b>' + Number(item.correctedDensity).toFixed(1) + ' kg/m³</b></div></div>' +
-      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px"><span class="fuel-tag ' + fuel.key + '">' + fuel.label + '</span>' +
-      '<button class="btn" type="button" data-delete-history="' + escapeHtml(item.id) + '" aria-label="Delete saved reading">Delete</button></div></article>';
-  }).join('');
-  $('history-empty').hidden = items.length > 0;
-  $('clear-history').disabled = items.length === 0;
-}
-$('save-history').addEventListener('click', () => {
-  if (!last) {
-    $('save-history').textContent = 'Enter valid readings';
-    setTimeout(() => $('save-history').textContent = 'Save reading', 1600);
-    return;
-  }
-  const items = readHistory();
-  items.unshift({
-    id: Date.now().toString() + '-' + Math.random().toString(36).slice(2,8),
-    savedAt: new Date().toISOString(),
-    temperature: last.T,
-    observedDensity: last.d,
-    correctedDensity: last.shown
-  });
-  if (!writeHistory(items)) {
-    $('save-history').textContent = 'Could not save';
-  } else {
-    renderHistory();
-    $('history').open = true;
-    $('save-history').textContent = 'Saved ✓';
-  }
-  setTimeout(() => $('save-history').textContent = 'Save reading', 1600);
-});
-$('history-list').addEventListener('click', e => {
-  const button = e.target.closest('[data-delete-history]');
-  if (!button) return;
-  const id = button.getAttribute('data-delete-history');
-  writeHistory(readHistory().filter(item => item.id !== id));
-  renderHistory();
-});
-$('clear-history').addEventListener('click', () => {
-  if (!readHistory().length) return;
-  if (confirm('Clear all saved density history on this device?')) {
-    writeHistory([]);
-    renderHistory();
-  }
-});
 
+// Input validation and calculation
+$('temp').addEventListener('input',()=>{last=null;$('out').textContent='—';$('reading').classList.add('empty');$('chips').innerHTML='<span class="chip">Tap Calculate</span>';});
+$('dens').addEventListener('input',()=>{const el=$('dens'),clean=el.value.replace(/[^0-9]/g,'');if(clean!==el.value)el.value=clean;last=null;$('out').textContent='—';$('reading').classList.add('empty');$('chips').innerHTML='<span class="chip">Tap Calculate</span>';});
+$('form').addEventListener('submit',e=>{e.preventDefault();render()});
+$('calculate').addEventListener('click',render);
+$('menu-toggle').addEventListener('click',()=>{const open=$('menu').classList.toggle('open');$('menu-toggle').setAttribute('aria-expanded',String(open));});
+document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap')){$('menu').classList.remove('open');$('menu-toggle').setAttribute('aria-expanded','false')}});
 
-// Inputs
-$('temp').addEventListener('input', () => { last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true; });
-// Density accepts whole numbers only: any decimal point or non-digit is removed as it is typed or pasted.
-$('dens').addEventListener('input', () => {
-  const el = $('dens'), clean = el.value.replace(/[^0-9]/g, '');
-  if (clean !== el.value) el.value = clean;
-  last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true;
-});
-$('form').addEventListener('submit', e => e.preventDefault());
-document.querySelectorAll('.step').forEach(b => b.addEventListener('click', () => {
-  const isT = b.dataset.t !== undefined, el = isT ? $('temp') : $('dens');
-  const cur = parse(el.value), step = Number(isT ? b.dataset.t : b.dataset.d);
-  const base = isNaN(cur) ? (isT ? 15 : 740) : cur;
-  el.value = (Math.round((base + step) * 100) / 100).toString();
-  last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true;
-}));
-document.querySelectorAll('.ex').forEach(b => b.addEventListener('click', () => {
-  const [t, d] = b.dataset.ex.split(',');
-  $('temp').value = t; $('dens').value = d; last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('scale').hidden = true;
-}));
-$('calculate').addEventListener('click', render);
-$('save-history').disabled = true;
-const _render = render;
-render = function(){ _render(); $('save-history').disabled = !last; $('copy').disabled = !last; };
-$('clear').addEventListener('click', () => { $('temp').value = ''; $('dens').value = ''; last = null; $('out').textContent = '—'; $('chips').innerHTML = ''; $('notes').innerHTML = ''; $('scale').hidden = true; $('how-body').innerHTML = '<p style="margin:0">Enter temperature and density, then tap Calculate.</p>'; $('temp').focus(); });
-$('copy').addEventListener('click', async () => {
-  if (!last) return;
-  const txt = last.shown.toFixed(1) + ' kg/m³ at 15 °C (' + fuelType(last.d).label + '; observed ' + last.d.toFixed(0) + ' kg/m³ at ' + last.T.toFixed(1) + ' °C; ASTM Table 53B)';
-  const btn = $('copy');
-  try { await navigator.clipboard.writeText(txt); btn.textContent = 'Copied'; }
-  catch (e) {
-    const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); btn.textContent = 'Copied'; } catch (e2) { btn.textContent = 'Select and copy'; }
-    ta.remove();
-  }
-  setTimeout(() => btn.textContent = 'Copy result', 1500);
-});
-
-// Theme toggle: cycles explicit light/dark over the system default
-$('theme').addEventListener('click', () => {
-  const root = document.documentElement;
-  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-  root.dataset.theme = dark ? 'light' : 'dark';
-});
-
-$('how-body').innerHTML = '<p style="margin:0">Enter temperature and density, then tap Calculate to see the table lookup and interpolation details.</p>';
+$('theme').addEventListener('click',()=>{const root=document.documentElement;const current=root.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');root.dataset.theme=current==='dark'?'light':'dark';$('menu').classList.remove('open');$('menu-toggle').setAttribute('aria-expanded','false');});
 renderHistory();
 </script>
 
