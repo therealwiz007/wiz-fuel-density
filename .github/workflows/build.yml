@@ -4,13 +4,15 @@ name: Build Wiz Fuel Density
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
   build:
+    name: Build Android App Bundle
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +29,22 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           cmdline-tools-version: 12266719
-          packages: 'platforms;android-36,build-tools;36.0.0'
+
+      - name: Install Android SDK 36
+        shell: bash
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME" -type f -name sdkmanager | head -n 1)
+
+          if [ -z "$SDKMANAGER" ]; then
+            echo "ERROR: sdkmanager was not found"
+            exit 1
+          fi
+
+          yes | "$SDKMANAGER" --licenses || true
+
+          "$SDKMANAGER" \
+            "platforms;android-36" \
+            "build-tools;36.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -37,9 +54,10 @@ jobs:
       - name: Build release bundle
         run: gradle --no-daemon bundleRelease
 
-      - name: Upload AAB
+      - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
         with:
           name: wiz-fuel-density-release-aab
           path: app/build/outputs/bundle/release/*.aab
           if-no-files-found: error
+          retention-days: 14
