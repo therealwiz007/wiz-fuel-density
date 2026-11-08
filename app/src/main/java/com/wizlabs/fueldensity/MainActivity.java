@@ -10,6 +10,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
@@ -45,12 +46,20 @@ public class MainActivity extends Activity {
         web.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) { return true; }
         });
+        // Lets the page match the system bars to its own light/dark choice.
+        web.addJavascriptInterface(new Object() {
+            @JavascriptInterface public void setDark(boolean dark) { runOnUiThread(() -> applyColors(dark)); }
+        }, "WizAndroid");
         web.loadUrl("file:///android_asset/index.html");
     }
 
     private void applyTheme(Configuration c) {
-        boolean dark = (c.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
-        int bg = dark ? Color.parseColor("#0C1514") : Color.parseColor("#EEF1EE");
+        applyColors((c.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
+    }
+
+    private void applyColors(boolean dark) {
+        if (web == null) return;
+        int bg = dark ? Color.parseColor("#0B0B0C") : Color.parseColor("#F6F6F3");
         web.setBackgroundColor(bg);
         getWindow().getDecorView().setBackgroundColor(bg);
         View d = getWindow().getDecorView();
@@ -63,6 +72,7 @@ public class MainActivity extends Activity {
     @Override public void onConfigurationChanged(Configuration c) {
         super.onConfigurationChanged(c);
         applyTheme(c);
+        if (web != null) web.evaluateJavascript("window.__wizSyncBars && window.__wizSyncBars()", null);
     }
 
     @Override protected void onDestroy() { if (web != null) web.destroy(); super.onDestroy(); }

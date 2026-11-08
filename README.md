@@ -3,10 +3,12 @@
 Offline Android utility for converting observed fuel density to reference density at 15 °C using the bundled reference table. Package ID: `com.wizlabs.fueldensity`.
 
 ## Features
-- Black-and-yellow mobile UI
+- Minimal black-and-yellow design that follows the phone's light/dark setting, with a manual switch (status bar matches)
+- Observed density first, then temperature. A 3-digit density jumps straight to temperature, and Enter calculates
 - Explicit Calculate action; no result until Calculate is tapped
-- Local saved reading history, per-item deletion, clear history
-- Copy result, reset, quick examples, ASTM reference link in Settings
+- Result shows the change from observed density and flags values marked as extrapolated in the source table
+- Copy, Share (full reading as text) and **Next**, which clears density and keeps the temperature for the next sample
+- Log of the last 50 calculations on the device: tap to load one again, delete single entries, or clear all
 - Offline WebView app; no INTERNET permission
 - GitHub Actions workflow builds a release Android App Bundle (AAB)
 

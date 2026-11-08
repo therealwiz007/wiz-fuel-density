@@ -11,8 +11,8 @@ android {
         applicationId = "com.wizlabs.fueldensity"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.1"
+        versionCode = 5
+        versionName = "1.2"
     }
 
     signingConfigs {
@@ -29,6 +29,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
