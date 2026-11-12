@@ -3,6 +3,7 @@
 Offline Android utility for converting observed fuel density to reference density at 15 °C using the bundled reference table. Package ID: `com.wizlabs.fueldensity`.
 
 ## Features
+- Animated hydrometer hero (v1.3): a float bobs in a fuel column tinted by density, its scale slides to the reading, and a mercury line shows the correction to 15 °C. Motion is compositor-only CSS, settles after 9 s idle, and stops under Battery Saver or with animations off
 - Minimal black-and-yellow design that follows the phone's light/dark setting, with a manual switch (status bar matches)
 - Observed density first, then temperature. A 3-digit density jumps straight to temperature, and Enter calculates
 - Explicit Calculate action; no result until Calculate is tapped
@@ -10,7 +11,7 @@ Offline Android utility for converting observed fuel density to reference densit
 - Copy, Share (full reading as text) and **Next**, which clears density and keeps the temperature for the next sample
 - Log of the last 50 calculations on the device: tap to load one again, delete single entries, or clear all
 - Offline WebView app; no INTERNET permission
-- GitHub Actions workflow builds a release Android App Bundle (AAB)
+- GitHub Actions builds a signed APK and AAB as separate artifacts named `Wiz Fuel Density (<version>)`
 
 ## Build
 Open this folder in Android Studio with JDK 17, or run `gradle bundleRelease` with Android SDK 36 installed. GitHub Actions can build on pushes to `main` or manually from Actions.

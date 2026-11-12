@@ -11,13 +11,14 @@ android {
         applicationId = "com.wizlabs.fueldensity"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.2"
+        versionCode = 6
+        versionName = "1.3"
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file(System.getenv("RELEASE_STORE_FILE"))
+            // CI supplies the keystore; local release builds without it stay unsigned.
+            System.getenv("RELEASE_STORE_FILE")?.let { storeFile = file(it) }
             storePassword = System.getenv("KEYSTORE_PASSWORD")
             keyAlias = System.getenv("KEY_ALIAS")
             keyPassword = System.getenv("KEY_PASSWORD")
@@ -26,7 +27,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            if (System.getenv("RELEASE_STORE_FILE") != null) signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

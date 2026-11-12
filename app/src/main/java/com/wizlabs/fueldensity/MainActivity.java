@@ -1,6 +1,13 @@
 package com.wizlabs.fueldensity;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.PowerManager;
+import android.view.HapticFeedbackConstants;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -43,14 +50,45 @@ public class MainActivity extends Activity {
         s.setAllowContentAccess(false);
         s.setTextZoom(100);
         applyTheme(getResources().getConfiguration());
-        web.setWebViewClient(new WebViewClient() {
-            @Override public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) { return true; }
-        });
         // Lets the page match the system bars to its own light/dark choice.
         web.addJavascriptInterface(new Object() {
             @JavascriptInterface public void setDark(boolean dark) { runOnUiThread(() -> applyColors(dark)); }
+            // Light tick for primary actions; needs no VIBRATE permission.
+            @JavascriptInterface public void haptic() { runOnUiThread(() -> web.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)); }
         }, "WizAndroid");
+        web.setWebViewClient(new WebViewClient() {
+            @Override public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) { return true; }
+            @Override public void onPageFinished(WebView v, String url) { syncMotion(); }
+        });
         web.loadUrl("file:///android_asset/index.html");
+    }
+
+    // Battery Saver or system animations off: the page shows a still frame instead of looping motion.
+    private final BroadcastReceiver powerReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context c, Intent i) { syncMotion(); }
+    };
+
+    private void syncMotion() {
+        if (web == null) return;
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        boolean still = (pm != null && pm.isPowerSaveMode()) || !ValueAnimator.areAnimatorsEnabled();
+        web.evaluateJavascript("window.__wizMotion && window.__wizMotion(" + still + ")", null);
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        if (web != null) { web.onResume(); web.resumeTimers(); }
+        IntentFilter f = new IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED);
+        if (android.os.Build.VERSION.SDK_INT >= 33) registerReceiver(powerReceiver, f, Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(powerReceiver, f);
+        syncMotion();
+    }
+
+    // Nothing runs while the app is in the background.
+    @Override protected void onPause() {
+        try { unregisterReceiver(powerReceiver); } catch (IllegalArgumentException ignored) {}
+        if (web != null) { web.onPause(); web.pauseTimers(); }
+        super.onPause();
     }
 
     private void applyTheme(Configuration c) {
