@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1024px;height:500px;overflow:hidden;background:#0B0B0C;font-family:Roboto,Inter,-apple-system,system-ui,sans-serif;color:#F4F4F2}
+.bg{position:absolute;inset:0;background:radial-gradient(520px 380px at 800px 260px,rgba(255,196,0,.20),transparent 70%),radial-gradient(400px 300px at 120px 520px,rgba(255,196,0,.08),transparent 70%)}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:32px 32px}
+.txt{position:absolute;left:72px;top:96px;width:520px}
+.mark{width:64px;height:64px;border-radius:18px;background:#FFC400;display:grid;place-items:center;margin-bottom:28px}
+h1{margin:0;font-size:64px;line-height:1.02;font-weight:800;letter-spacing:-.035em}
+h1 span{color:#FFC400}
+p{margin:18px 0 0;font-size:24px;color:#B4B4BA;letter-spacing:-.01em}
+.pills{display:flex;gap:10px;margin-top:26px}
+.pill{padding:8px 16px;border-radius:999px;border:1.5px solid #2c2c31;font-size:17px;font-weight:600;color:#F4F4F2;font-family:"Roboto Mono",monospace}
+.scene{position:absolute;left:650px;top:-6px;width:108px;height:168px;transform:scale(2.95);transform-origin:top left}
+.jar{position:absolute;left:4px;top:34px;width:70px;height:132px;border:1.5px solid rgba(255,255,255,.3);border-top:0;border-radius:4px 4px 18px 18px;background:rgba(255,255,255,.03)}
+.jar::before{content:"";position:absolute;left:-6px;right:-6px;top:-1px;height:2px;border-radius:2px;background:rgba(255,255,255,.3)}
+.liquid{position:absolute;left:0;right:0;top:30px;bottom:0;border-radius:0 0 16px 16px;background:hsl(42,100%,56%);opacity:.85;overflow:hidden}
+.liquid::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(0,0,0,.18))}
+.bub{position:absolute;border-radius:50%;background:rgba(255,255,255,.75)}
+.float{position:absolute;left:24px;top:2px;width:22px;height:104px}
+.surface{position:absolute;left:0;right:0;top:30px;height:1px;background:rgba(255,255,255,.75)}
+.streak{position:absolute;left:7px;top:10px;width:3px;height:96px;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0))}
+.thermo{position:absolute;left:84px;top:22px;width:14px;height:146px}
+.tube{position:absolute;left:3px;top:0;width:8px;height:128px;border:1.5px solid rgba(255,255,255,.3);border-bottom:0;border-radius:6px 6px 0 0}
+.bulb{position:absolute;left:-1px;top:124px;width:16px;height:16px;border-radius:50%;background:#FF6A47}
+.merc{position:absolute;left:5.5px;bottom:20px;width:3px;height:32px;border-radius:2px;background:#FF6A47}
+.ticks{position:absolute;left:-6px;top:10px;width:6px;height:116px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.3) 0 1px,transparent 1px 12.9px)}
+.t15{position:absolute;left:-8px;top:90px;font:700 8px/8px "Roboto Mono",monospace;color:#FFC400}
+.t15 i{position:absolute;top:3px;width:8px;height:2px;background:#FFC400}.t15 span{position:absolute;left:24px}
+.read{position:absolute;left:770px;top:52px;font:800 40px/1 Roboto,sans-serif;letter-spacing:-.03em;color:#FFC400;display:none}
+</style></head><body><div class="bg"></div><div class="grid"></div>
+<div class="txt">
+  <div class="mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#111113" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/></svg></div>
+  <h1>Fuel density<br>at <span>15 °C</span>, instantly</h1>
+  <p>Petrol &amp; diesel correction from ASTM Table 53B</p>
+  <div class="pills"><span class="pill">Offline</span><span class="pill">Log</span><span class="pill">Share</span></div>
+</div>
+<div class="scene">
+  <div class="jar">
+    <div class="float"><svg viewBox="0 0 22 104" width="22" height="104">
+      <rect x="8" y="0" width="6" height="74" rx="3" fill="#EDEDE8" stroke="#77777F" stroke-width="1"/>
+      <path d="M8 6h3M8 10h2M8 14h2M8 18h2M8 22h2M8 26h3M8 30h2M8 34h2M8 38h2M8 42h2M8 46h3M8 50h2M8 54h2M8 58h2M8 62h2M8 66h3" stroke="#55555C" stroke-width=".9"/>
+      <path d="M8 26h6M8 46h6" stroke="#FFC400" stroke-width="1.2"/>
+      <path d="M8 72c-5 3-7 8-7 14v6c0 6 4 11 10 11s10-5 10-11v-6c0-6-2-11-7-14z" fill="#EDEDE8" stroke="#77777F" stroke-width="1"/>
+      <ellipse cx="11" cy="97" rx="6.5" ry="4" fill="#55555C" opacity=".75"/>
+      <path d="M5 82c0-3 1-5 3-6" stroke="#fff" stroke-width="1.4" stroke-linecap="round" fill="none" opacity=".8"/></svg></div>
+    <div class="liquid"><span class="bub" style="left:12px;top:60px;width:4px;height:4px"></span><span class="bub" style="left:54px;top:34px;width:3px;height:3px"></span><span class="bub" style="left:58px;top:78px;width:4px;height:4px"></span></div>
+    <div class="surface"></div><div class="streak"></div>
+  </div>
+  <svg style="position:absolute;left:66px;top:60px" width="10" height="8" viewBox="0 0 10 8"><path d="M10 0L2 4l8 4z" fill="#FFC400"/></svg>
+  <div class="thermo"><div class="tube"></div><div class="ticks"></div><div class="merc"></div><div class="bulb"></div><div class="t15"><i></i><span>15°</span></div></div>
+</div>
+</body></html>
