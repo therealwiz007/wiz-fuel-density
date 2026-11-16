@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Auto Backup up to Android 11. Include-only: the readings log and theme live in the WebView's
+     localStorage, so only that folder is listed. Everything else (wiz_update, wiz_review, wiz_ads
+     prefs, caches) stays out. Both paths: current WebView ("Default" profile) and older ones. -->
+<full-backup-content>
+    <include domain="root" path="app_webview/Default/Local Storage/" />
+    <include domain="root" path="app_webview/Local Storage/" />
+</full-backup-content>

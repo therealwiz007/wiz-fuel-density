@@ -56,6 +56,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stro
 .menu.open{visibility:visible;opacity:1;transform:none;transition:opacity .16s,transform .32s var(--spring),visibility 0s}
 .menu button,.menu a{display:flex;align-items:center;gap:12px;border:0;background:none;text-align:left;text-decoration:none;padding:11px 12px;border-radius:11px;font-size:14px;color:var(--ink)}
 .menu button:active,.menu a:active{background:var(--field)}
+.menu [hidden]{display:none}
 .menu svg.i{width:18px;height:18px;color:var(--ink-2)}
 
 /* Cards */
@@ -207,6 +208,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
       <nav class="menu" id="menu" aria-label="App menu">
         <button id="share-app" type="button"><svg class="i" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Share app</button>
         <a href="https://store.astm.org/d1250-80r02.html" target="_blank" rel="noopener noreferrer"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>ASTM Table 53B reference</a>
+        <button id="rate-app" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.1 1 5.8L12 16.9l-5.25 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>Rate app</button>
+        <button id="privacy-options" type="button" hidden><svg class="i" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/></svg>Privacy options</button>
       </nav>
     </div>
   </header>
@@ -333,6 +336,8 @@ function showToast(message, ok) {
   clearTimeout(window.__wizToastTimer);
   window.__wizToastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
 }
+// Use events for the native review prompt; the native side accepts only "calc", "copy" and "next".
+function wizEvent(name) { try { if (window.WizAndroid && window.WizAndroid.event) window.WizAndroid.event(name); } catch (_) {} }
 function haptic() {
   try { if (window.WizAndroid && window.WizAndroid.haptic) { window.WizAndroid.haptic(); return; } } catch (_) {}
   if (navigator.vibrate) try { navigator.vibrate(8); } catch (_) {}
@@ -389,6 +394,7 @@ function calculate() {
   popValue(); haptic();
   heroSync(true);
   addToLog(last);
+  wizEvent('calc');
 }
 
 function fmtNum(T) { return (Math.round(T * 100) / 100).toString().replace('-', '−'); }
@@ -467,7 +473,7 @@ $('copy-result').addEventListener('click', async () => {
   if (!last) return;
   const ok = await copyText(last.shown.toFixed(1));
   showToast(ok ? 'Copied ' + last.shown.toFixed(1) : 'Copy unavailable', ok);
-  if (ok) { const b = $('copy-result'); b.classList.add('done'); haptic(); clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('done'), 1400); }
+  if (ok) { const b = $('copy-result'); b.classList.add('done'); haptic(); clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('done'), 1400); wizEvent('copy'); }
 });
 $('share-result').addEventListener('click', async () => {
   if (!last) return;
@@ -478,7 +484,7 @@ $('share-result').addEventListener('click', async () => {
 });
 // Next reading: keep the temperature, clear density, ready for the next sample.
 $('next').addEventListener('click', () => {
-  $('dens').value = ''; clearResult('Ready for the next sample'); validate(); $('dens').focus(); haptic();
+  $('dens').value = ''; clearResult('Ready for the next sample'); validate(); $('dens').focus(); haptic(); wizEvent('next');
 });
 
 $('history-list').addEventListener('click', e => {
@@ -525,13 +531,19 @@ $('theme').addEventListener('click', () => {
   try { localStorage.setItem(THEME_KEY, next); } catch (_) {}
 });
 
-const APP_URL = 'https://play.google.com/store/apps/details?id=com.wizlabs.fueldensity';
+const APP_URL = 'https://play.google.com/store/apps/details?id=com.wizlabs.fueldensity&referrer=utm_source%3Dshare%26utm_medium%3Dinapp';
+const SHARE_TEXT = 'Wiz Fuel Density: petrol & diesel density at 15°C, offline. 15°C डेंसिटी ऐप।';
 $('share-app').addEventListener('click', async () => {
   closeMenu();
-  try { if (navigator.share) { await navigator.share({ title: 'Wiz Fuel Density', text: 'Petrol & diesel density at 15 °C, offline', url: APP_URL }); return; } }
+  try { if (navigator.share) { await navigator.share({ title: 'Wiz Fuel Density', text: SHARE_TEXT, url: APP_URL }); return; } }
   catch (err) { if (err && err.name === 'AbortError') return; }
-  showToast(await copyText(APP_URL) ? 'App link copied' : APP_URL);
+  showToast(await copyText(SHARE_TEXT + ' ' + APP_URL) ? 'App link copied' : APP_URL);
 });
+// Rate app opens this app's own Play listing (native side; the page passes nothing).
+$('rate-app').addEventListener('click', () => { closeMenu(); try { if (window.WizAndroid && window.WizAndroid.openListing) window.WizAndroid.openListing(); } catch (_) {} });
+// Privacy options: shown only when the native side says the consent form requires it (never while ads are off).
+$('privacy-options').addEventListener('click', () => { closeMenu(); try { if (window.WizAndroid && window.WizAndroid.privacyOptions) window.WizAndroid.privacyOptions(); } catch (_) {} });
+window.__wizAds = function (st) { $('privacy-options').hidden = !(st && st.enabled && st.privacyRequired); };
 
 
 // ---- Hydrometer hero (visual only; it never delays or changes a result) ----

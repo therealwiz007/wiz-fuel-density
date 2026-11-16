@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ads are off in this release: keep the advertising ID permission the ad SDK merges in out of
+     the release manifest, so the Play "Advertising ID" answer stays No (plan 4.3). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
+</manifest>
