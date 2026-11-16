@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petrol and Diesel Density at 15°C - Wiz Fuel Density</title>
+<meta name="description" content="Enter the hydrometer reading and temperature to get petrol or diesel density at 15°C from ASTM Table 53B. Works offline on Android, with a log of readings.">
+<link rel="canonical" href="https://therealwiz007.github.io/wiz-fuel-density/">
+<link rel="alternate" hreflang="en" href="https://therealwiz007.github.io/wiz-fuel-density/">
+<link rel="alternate" hreflang="hi" href="https://therealwiz007.github.io/wiz-fuel-density/hi/">
+<link rel="alternate" hreflang="x-default" href="https://therealwiz007.github.io/wiz-fuel-density/">
+<link rel="icon" href="site/icon-96.png">
+<meta name="theme-color" content="#FFC400">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wiz Fuel Density: petrol and diesel density at 15°C">
+<meta property="og:description" content="Hydrometer reading and temperature to density at 15°C, from ASTM Table 53B. Works offline on Android.">
+<meta property="og:url" content="https://therealwiz007.github.io/wiz-fuel-density/">
+<meta property="og:image" content="https://therealwiz007.github.io/wiz-fuel-density/site/og-image.png">
+<meta property="og:locale" content="en_IN">
+<meta property="og:site_name" content="Wiz Labs">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Wiz Fuel Density",
+  "operatingSystem": "Android 8.0 and up",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "Petrol and diesel density at 15°C from hydrometer reading and temperature, based on ASTM D1250 Table 53B.",
+  "softwareVersion": "1.5",
+  "inLanguage": "en",
+  "url": "https://therealwiz007.github.io/wiz-fuel-density/",
+  "installUrl": "https://play.google.com/store/apps/details?id=com.wizlabs.fueldensity",
+  "image": "https://therealwiz007.github.io/wiz-fuel-density/site/og-image.png",
+  "screenshot": "https://therealwiz007.github.io/wiz-fuel-density/site/shot-1.jpg",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "INR"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Wiz Labs",
+    "url": "https://therealwiz007.github.io/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert observed density to density at 15°C?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Type the density you read on the hydrometer, then the sample temperature, and tap Calculate. The app looks up the density at 15°C in the bundled table and shows how much it changed from the observed value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What density and temperature range is covered?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Observed density from 710 to 840 kg/m³ and temperature from −10 to 80°C, which covers petrol and diesel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which table does it use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ASTM D1250 Table 53B. Values the source table lists as extrapolated are marked. Always confirm against your approved table before writing a value in official records."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work without internet?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The full table is inside the app, and the calculator page cannot use the network at all."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my readings saved?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The last 50 calculations stay on your phone. Tap one to load it again, delete one, or clear the log. With Android backup on, they also come back after a reinstall."
+      }
+    }
+  ]
+}
+</script>
+<style>
+:root{--bg:#F6F6F3;--card:#fff;--line:#E7E6E0;--text:#111113;--muted:#5C5C63;--accent:#FFC400;--ink:#111113}
+@media (prefers-color-scheme:dark){:root{--bg:#0B0B0C;--card:#151517;--line:#242428;--text:#F4F4F2;--muted:#B4B4BA}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 16px 40px}
+header{display:flex;align-items:center;gap:14px}
+header img{width:56px;height:56px;border-radius:14px}
+h1{font-size:1.7rem;line-height:1.2;margin:0;letter-spacing:-.02em}
+.pitch{color:var(--muted);margin:14px 0 18px}
+.play{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;text-decoration:none;padding:12px 20px;border-radius:14px;font-weight:600;border:1px solid var(--accent);transition:transform .15s}
+.play:active{transform:scale(.97)}
+.play b{color:var(--accent)}
+.lang{margin-left:12px;color:var(--muted)}
+.shots{display:flex;gap:10px;overflow-x:auto;margin:26px 0 8px;padding-bottom:6px;scroll-snap-type:x mandatory}
+.shots img{width:180px;height:320px;flex:none;border-radius:16px;border:1px solid var(--line);scroll-snap-align:start;background:var(--card)}
+section{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 20px;margin-top:16px}
+h2{font-size:1.15rem;margin:0 0 8px}
+ul{padding-left:20px;margin:0}
+li{margin:4px 0}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:600}
+a{color:inherit}
+.small{color:var(--muted);font-size:.9rem}
+footer{max-width:760px;margin:0 auto;padding:0 16px 32px;color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion:reduce){.play{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <img src="site/icon-96.png" alt="Wiz Fuel Density icon" width="56" height="56">
+  <h1>Wiz Fuel Density: density at 15°C calculator</h1>
+</header>
+<p class="pitch">Enter the density you read on the hydrometer and the sample temperature, and get the density at 15°C without searching a printed density chart. Built for petrol pump dealers, managers and staff, and for depot, lab and transport teams.</p>
+<a class="play" href="https://play.google.com/store/apps/details?id=com.wizlabs.fueldensity&amp;referrer=utm_source%3Dwizlabs_site%26utm_medium%3Dlanding%26utm_campaign%3Dwiz-fuel-density">Get it on <b>Google Play</b></a>
+<a class="lang" href="hi/" hreflang="hi" lang="hi">हिंदी में पढ़ें</a>
+
+<div class="shots">
+  <img src="site/shot-1.jpg" alt="Wiz Fuel Density result: observed density and temperature give the density at 15°C" width="180" height="320" loading="lazy">
+  <img src="site/shot-2.jpg" alt="Wiz Fuel Density entry form with the animated hydrometer" width="180" height="320" loading="lazy">
+  <img src="site/shot-3.jpg" alt="Wiz Fuel Density log of recent readings" width="180" height="320" loading="lazy">
+</div>
+
+<section>
+  <h2>What it does</h2>
+  <ul>
+    <li>Density at 15°C from observed density (710 to 840 kg/m³) and temperature (−10 to 80°C).</li>
+    <li>Based on ASTM D1250 Table 53B, for petrol (MS) and diesel (HSD).</li>
+    <li>Shows the change from the observed reading and marks values the source table lists as extrapolated.</li>
+    <li>Fast entry: a 3-digit density jumps to temperature. Next keeps the temperature for the next sample.</li>
+    <li>Log of the last 50 calculations on your phone. Copy or share a reading for WhatsApp or your density register.</li>
+    <li>Works without internet. No account, no login.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Questions</h2>
+  <details><summary>How do I convert observed density to density at 15°C?</summary><p>Type the density you read on the hydrometer, then the sample temperature, and tap Calculate. The app looks up the density at 15°C in the bundled table and shows how much it changed from the observed value.</p></details>
+  <details><summary>What density and temperature range is covered?</summary><p>Observed density from 710 to 840 kg/m³ and temperature from −10 to 80°C, which covers petrol and diesel.</p></details>
+  <details><summary>Which table does it use?</summary><p>ASTM D1250 Table 53B. Values the source table lists as extrapolated are marked. Always confirm against your approved table before writing a value in official records.</p></details>
+  <details><summary>Does it work without internet?</summary><p>Yes. The full table is inside the app, and the calculator page cannot use the network at all.</p></details>
+  <details><summary>Are my readings saved?</summary><p>The last 50 calculations stay on your phone. Tap one to load it again, delete one, or clear the log. With Android backup on, they also come back after a reinstall.</p></details>
+</section>
+
+<section>
+  <h2>More from Wiz Labs</h2>
+  <ul>
+    <li><a href="https://therealwiz007.github.io/Wiz-Dip-Charts/">Wiz Dip Charts</a>: tank dip chart calculator, dip in cm to litres.</li>
+    <li><a href="https://therealwiz007.github.io/wizmockgps-privacy/app/">Wiz Mock GPS</a>: mock location for app testing.</li>
+  </ul>
+</section>
+</main>
+<footer>
+  <p><a href="privacy-policy.html">Privacy policy</a> · Contact: <a href="mailto:blazewizofficial@gmail.com">blazewizofficial@gmail.com</a></p>
+  <p>Wiz Fuel Density is an independent tool by Wiz Labs. It is not affiliated with or approved by any oil company or by ASTM. Google Play is a trademark of Google LLC.</p>
+</footer>
+</body>
+</html>

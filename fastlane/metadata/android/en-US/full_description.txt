@@ -1,0 +1,29 @@
+Wiz Fuel Density converts the density you read on the hydrometer to density at 15°C. Enter the observed density and the sample temperature, tap Calculate, and get the corrected value without searching through a printed density chart.
+
+It is built for petrol pump dealers, managers and staff who check density every morning and at every tanker receipt, and for depot, lab and transport staff who work with petrol (MS) and diesel (HSD).
+
+What it does
+• Density at 15°C from observed density (710 to 840 kg/m³) and temperature (−10 to 80°C).
+• Based on ASTM D1250 Table 53B.
+• Shows how much the value changed from the observed reading, and marks values that the source table lists as extrapolated.
+• Fast entry: type a 3-digit density and the cursor jumps to temperature.
+• Next: clears the density and keeps the temperature for the next sample.
+• Log: the last 50 calculations stay on your phone. Tap one to load it again.
+• Copy or share a reading as text, for WhatsApp or your density register.
+• Light and dark theme, with an animated hydrometer that shows the correction.
+
+Works without internet
+The full table is inside the app. Your readings and log stay on your phone. No account, no login.
+
+When to use it
+• Morning density check before sales start
+• Tanker receipt: compare with the density at 15°C on the challan or invoice
+• Inspection and audit checks
+• Training new staff to work out density
+
+Accuracy note
+Results come from the reference table bundled in the app. Always confirm against your approved table and your company's procedure before you write a value in official records.
+
+Wiz Fuel Density is an independent tool by Wiz Labs. It is not affiliated with or approved by any oil company or by ASTM.
+
+Also from Wiz Labs: Wiz Dip Charts, a tank dip chart calculator.

@@ -26,11 +26,24 @@ p{margin:18px 0 0;font-size:24px;color:#B4B4BA;letter-spacing:-.01em}
 .t15{position:absolute;left:-8px;top:90px;font:700 8px/8px "Roboto Mono",monospace;color:#FFC400}
 .t15 i{position:absolute;top:3px;width:8px;height:2px;background:#FFC400}.t15 span{position:absolute;left:24px}
 .read{position:absolute;left:770px;top:52px;font:800 40px/1 Roboto,sans-serif;letter-spacing:-.03em;color:#FFC400;display:none}
+
+/* Wiz yellow background with black text (plan 2.5: no dark backgrounds on the feature graphic) */
+html,body{background:#FFC400;color:#111113}
+.bg{background:radial-gradient(520px 380px at 800px 260px,rgba(255,255,255,.35),transparent 70%)}
+.grid{background-image:linear-gradient(rgba(17,17,19,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(17,17,19,.05) 1px,transparent 1px)}
+.mark{background:#111113}
+h1 span{color:#111113;background:#FFFFFF;padding:0 10px;border-radius:12px}
+p{color:#3A3A3F}
+.pill{border-color:#111113;color:#111113}
+.jar,.tube{border-color:rgba(17,17,19,.55)}.jar::before{background:rgba(17,17,19,.55)}
+.jar{background:rgba(255,255,255,.35)}.liquid{background:hsl(28,100%,50%)}
+.ticks{background:repeating-linear-gradient(180deg,rgba(17,17,19,.45) 0 1px,transparent 1px 12.9px)}
+.t15{color:#111113}.t15 i{background:#111113}
 </style></head><body><div class="bg"></div><div class="grid"></div>
 <div class="txt">
-  <div class="mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#111113" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/></svg></div>
-  <h1>Fuel density<br>at <span>15 °C</span>, instantly</h1>
-  <p>Petrol &amp; diesel correction from ASTM Table 53B</p>
+  <div class="mark"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFC400" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/></svg></div>
+  <h1>Density at <span>15°C</span>.<br>No chart hunting.</h1>
+  <p>Petrol &amp; diesel, from hydrometer reading and temperature</p>
   <div class="pills"><span class="pill">Offline</span><span class="pill">Log</span><span class="pill">Share</span></div>
 </div>
 <div class="scene">
@@ -45,7 +58,7 @@ p{margin:18px 0 0;font-size:24px;color:#B4B4BA;letter-spacing:-.01em}
     <div class="liquid"><span class="bub" style="left:12px;top:60px;width:4px;height:4px"></span><span class="bub" style="left:54px;top:34px;width:3px;height:3px"></span><span class="bub" style="left:58px;top:78px;width:4px;height:4px"></span></div>
     <div class="surface"></div><div class="streak"></div>
   </div>
-  <svg style="position:absolute;left:66px;top:60px" width="10" height="8" viewBox="0 0 10 8"><path d="M10 0L2 4l8 4z" fill="#FFC400"/></svg>
+  <svg style="position:absolute;left:66px;top:60px" width="10" height="8" viewBox="0 0 10 8"><path d="M10 0L2 4l8 4z" fill="#111113"/></svg>
   <div class="thermo"><div class="tube"></div><div class="ticks"></div><div class="merc"></div><div class="bulb"></div><div class="t15"><i></i><span>15°</span></div></div>
 </div>
 </body></html>
