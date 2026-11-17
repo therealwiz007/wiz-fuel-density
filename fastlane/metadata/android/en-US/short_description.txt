@@ -1,1 +1,1 @@
-Petrol & diesel density at 15°C from hydrometer reading and temperature. Offline
+Density chart at 15°C for petrol & diesel at IOCL, BPCL, HPCL pumps. Offline

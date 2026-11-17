@@ -2,6 +2,9 @@ Wiz Fuel Density converts the density you read on the hydrometer to density at 1
 
 It is built for petrol pump dealers, managers and staff who check density every morning and at every tanker receipt, and for depot, lab and transport staff who work with petrol (MS) and diesel (HSD).
 
+Density chart for IOCL, BPCL, HPCL, Jio-bp and Nayara pumps
+Indian Oil (IOCL), Bharat Petroleum (BPCL), Hindustan Petroleum (HPCL), Jio-bp, Nayara Energy and Shell petrol pumps all report density at 15°C. Instead of looking up the printed density chart (Table 53B) row by row, type the hydrometer reading and the temperature and get the 15 degree density in one tap. It works as a petrol density chart, a diesel density chart and a density calculator in one app.
+
 What it does
 • Density at 15°C from observed density (710 to 840 kg/m³) and temperature (−10 to 80°C).
 • Based on ASTM D1250 Table 53B.
@@ -24,6 +27,6 @@ When to use it
 Accuracy note
 Results come from the reference table bundled in the app. Always confirm against your approved table and your company's procedure before you write a value in official records.
 
-Wiz Fuel Density is an independent tool by Wiz Labs. It is not affiliated with or approved by any oil company or by ASTM.
+Wiz Fuel Density is an independent tool by Wiz Labs. It is not affiliated with, endorsed by or approved by IOCL, BPCL, HPCL, Jio-bp, Nayara Energy, Shell, any other oil company or ASTM. Company names are used only to say which petrol pumps the density chart is for.
 
 Also from Wiz Labs: Wiz Dip Charts, a tank dip chart calculator.
