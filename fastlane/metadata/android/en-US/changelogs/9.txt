@@ -1,0 +1,3 @@
+Wiz Fuel Density 1.6:
+• Ads library updated to the latest version
+• Small fixes and stability improvements

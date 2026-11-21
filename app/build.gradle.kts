@@ -18,8 +18,8 @@ android {
         applicationId = "com.wizlabs.fueldensity"
         minSdk = 26
         targetSdk = 36
-        versionCode = 8
-        versionName = "1.5"
+        versionCode = 9
+        versionName = "1.6"
         buildConfigField("boolean", "WIZ_ADS_ENABLED", "$wizAdsEnabled")
     }
 
@@ -62,7 +62,7 @@ android {
 dependencies {
     implementation("com.google.android.play:app-update:2.1.0")
     implementation("com.google.android.play:review:2.0.2")
-    implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.6.0")
+    implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.7.0")
     implementation("com.google.android.ump:user-messaging-platform:4.0.0")
     testImplementation("junit:junit:4.13.2")
 }
